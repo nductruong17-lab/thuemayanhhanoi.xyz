@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://thuemayanhhanoi.xyz/sitemap.xml
