@@ -1,0 +1,75 @@
+/* ===== Cami UI upgrade ===== */
+:root{--rose-deep:#682342;--rose-soft:#f8eaf1;--ok:#1d583b;--ok-bg:#e5f3eb}
+.top{position:sticky;top:0;z-index:30;background:#fffcf9e6;backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px)}
+#rental-finder,#dat-lich,#may,#goi-y,#quy-trinh{scroll-margin-top:80px}
+
+/* Hero */
+.hero-cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.hero-cta .hero-catalog-link{margin:0}
+.hero-ghost{display:inline-flex;align-items:center;min-height:42px;padding:6px 15px;border-radius:50px;border:1.5px solid #702745;color:#702745;text-decoration:none;font-weight:700;font-size:clamp(.76rem,1.55vw,.96rem)}
+.hero-ghost:hover{background:#fff}
+.hero-trust{list-style:none;display:flex;flex-wrap:wrap;gap:6px;padding:0;margin:14px 0 0}
+.hero-trust li{font-size:12.5px;padding:4px 10px;border-radius:30px;background:#ffffffb3;border:1px solid #efd9e1;color:#5d3346}
+.hero-trust b{color:var(--rose-deep)}
+
+/* Finder */
+.finder-summary{margin:12px 0 0;padding:10px 14px;border-radius:12px;background:var(--rose-soft);font-size:14px;color:#4e2840}
+.finder-summary:empty{display:none}
+.finder-summary b{color:var(--rose-deep)}
+.rental-finder-actions #check-availability{min-height:44px;padding-inline:20px;font-size:14px}
+
+/* Cards */
+.card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px #6a28451c}
+.card.is-selected{border-color:#b45d85;box-shadow:0 0 0 2px #b45d8555,0 10px 26px #6a28451c}
+.card.is-selected .button{background:var(--rose-deep);color:#fff;border-color:var(--rose-deep)}
+.card[data-state="busy"] .product-image img{opacity:.45;filter:grayscale(.6)}
+.card[data-state="busy"] h3{color:#8c7880}
+.range-total{display:inline-block;margin-top:3px;padding:2px 8px;border-radius:8px;background:#f6ecf0;color:#5d2a42;font-size:12.5px;width:max-content;max-width:100%}
+.range-total b{color:var(--rose-deep)}
+.stock-tag[data-state="free"]::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#2e8b5a;margin-right:5px;vertical-align:1px}
+.camera-rail{scroll-padding-left:2px}
+
+/* Booking */
+.booking-selection{transition:box-shadow .3s}
+.booking-selection.flash{animation:flash 1.1s ease}
+@keyframes flash{0%{box-shadow:0 0 0 0 #b45d8599}40%{box-shadow:0 0 0 6px #b45d8533}100%{box-shadow:0 0 0 0 transparent}}
+.price-breakdown{list-style:none;margin:0 0 8px;padding:0 0 8px;border-bottom:1px dashed #dfc3d0;display:grid;gap:4px;font-size:14px;color:#5a4650}
+.price-breakdown:empty{display:none}
+.price-breakdown li,.price-summary output[data-ok]{display:flex;justify-content:space-between;gap:10px}
+.price-summary output[data-ok] span:last-child{color:var(--rose-deep);font-size:1.3rem}
+.field-error{color:#a3324f;font-size:12.5px;font-weight:600}
+input[aria-invalid="true"]{border-color:#c4476a;background:#fff7f9}
+#submit-request{min-height:52px;font-size:1.02rem}
+.request-success{text-align:center;padding:22px 16px;border-radius:16px;background:var(--ok-bg);color:var(--ok)}
+.request-success h3{font:700 1.5rem var(--serif);margin:6px 0}
+.request-success p{color:#2f5a44}
+.request-success .actions{justify-content:center;margin-top:12px}
+.success-icon{width:52px;height:52px;margin:0 auto;border-radius:50%;display:grid;place-items:center;background:#2e8b5a;color:#fff;font-size:26px;font-weight:800}
+
+/* Policies */
+details.policy{border:1px solid var(--line);border-radius:14px;background:#fff;padding:0;margin-top:10px}
+details.policy summary{list-style:none;padding:14px 46px 14px 16px;position:relative;display:grid;gap:2px}
+details.policy summary::-webkit-details-marker{display:none}
+details.policy summary::after{content:"+";position:absolute;right:16px;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--rose-soft);color:var(--rose-deep);font-weight:700}
+details.policy[open] summary::after{content:"–"}
+details.policy summary small{font-weight:500;color:var(--muted);font-size:13px}
+details.policy>:not(summary){padding:0 16px}
+details.policy[open]{padding-bottom:6px}
+
+/* Sticky booking bar (mobile) */
+.sticky-book{display:none}
+@media(max-width:1420px){
+ .sticky-book:not([hidden]){display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;position:fixed;inset:auto 0 0;z-index:25;background:#fffdfa;border-top:1px solid #eddee3;box-shadow:0 -6px 24px #45182e1f;padding:8px 14px calc(8px + env(safe-area-inset-bottom))}
+ .sticky-book img{width:56px;height:44px;object-fit:contain;mix-blend-mode:multiply}
+ .sticky-book strong{display:block;font-size:14px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .sticky-book span{display:block;font-size:13px;color:var(--rose-deep);font-weight:700}
+ .sticky-book .button{min-height:44px;padding-inline:18px}
+ body.has-sticky .quick-contact{display:none}
+}
+@media(max-width:650px){
+ .hero-trust{display:none}
+ .hero-cta{gap:6px}
+ .hero-ghost{min-height:38px;padding:4px 11px}
+}
+@media(prefers-reduced-motion:reduce){.card,.card:hover{transition:none;transform:none}.booking-selection.flash{animation:none}}
