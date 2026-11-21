@@ -279,3 +279,7 @@ input:not([type=checkbox]),select,textarea{border-radius:10px;border-color:#d9c5
 @media(prefers-reduced-motion:reduce){.hero-product img{transition:none}}
 
 .hero-phrase{white-space:nowrap}
+
+/* Máy ảnh đầu trang giữ màu gốc */
+.hero-product::before{background:#fff;border-color:#fff;box-shadow:0 14px 34px #4a1f3322}
+.hero-product img{mix-blend-mode:multiply}

@@ -41,6 +41,7 @@ let sending=false;
 let lastSubmission;
 let sentCode;
 let stickyTotal='';
+let datePicked=false; // chỉ hiện còn/hết máy trên thẻ sau khi khách tự chọn ngày
 
 let currentRange = '';
 let availabilityRequest;
@@ -85,7 +86,7 @@ function renderRecommendations(){
   const item=catalog.find(row=>row[0]===id);
   if(!item)return [];
   const [,name,,six,day,,,photo]=item;
-  const status=plan.value==='six'&&!six?'Chỉ thuê theo ngày':!availabilityResults?'':availableForPlan(id,six)?'Còn máy':'Hết trong khung đã chọn';
+  const status=plan.value==='six'&&!six?'Chỉ thuê theo ngày':!availabilityResults||!datePicked?'':availableForPlan(id,six)?'Còn máy':'Hết trong khung đã chọn';
   const short=plan.value==='six'&&six;
   return `<article class="occasion-card">
    <img src="img/${photo}.webp" width="144" height="112" alt="" loading="lazy" decoding="async">
@@ -111,19 +112,19 @@ function rangeDays(){
 function renderCard([id,name,brand,six,day,third,fifth,photo,deposit]){
  const days=rangeDays();
  const totalLine=days>1?`<span class="range-total">${days} ngày · <b>${currency(dayPrice(days,day,third,fifth))}</b></span>`:'';
- const state=plan.value==='six'&&!six?'unsupported':!availabilityResults?'unknown':availableForPlan(id,six)?'free':'busy';
+ const state=plan.value==='six'&&!six?'unsupported':!availabilityResults||!datePicked?'unknown':availableForPlan(id,six)?'free':'busy';
  const count=availabilityCounts?.[managerModels[id]];
- const label={unsupported:'Chỉ thuê theo ngày',unknown:'Chưa kiểm tra',free:Number.isInteger(count)?'Còn '+count+' máy':'Còn máy',busy:'Hết máy'}[state];
+ const label={unsupported:'Chỉ thuê theo ngày',unknown:'',free:'Còn máy',busy:'Hết máy trong ngày đã chọn'}[state];
  const hot=hotIds.includes(id);
  const picture=photo?`<img src="img/${photo}.webp" alt="${escapeText(name)}" width="720" height="540" loading="lazy" decoding="async">`:'<span class="no-photo">Chưa có ảnh</span>';
  return `<article class="card${model.value===id?' is-selected':''}" data-state="${state}">
  <a class="product-image" data-model="${id}" href="#dat-lich" aria-label="Chọn ${escapeText(name)}">${picture}</a>
  <div class="card-body">
- <div class="card-tags">${hot?'<span class="bestseller"><span aria-hidden="true">★</span> Best Seller</span>':''}<span class="stock-tag" data-state="${state}">${label}</span></div>
+ <div class="card-tags">${hot?'<span class="bestseller"><span aria-hidden="true">★</span> Best Seller</span>':''}${label?`<span class="stock-tag" data-state="${state}">${label}</span>`:''}</div>
  <h3>${escapeText(name)}</h3><div class="rates"><span><b>${currency(day)}</b> / ngày</span>${six?'<span>'+currency(six)+' / 6 giờ</span>':'<span>Gói theo ngày</span>'}${totalLine}</div>
  <button type="button" class="deposit-link" data-deposit-model="${id}">${deposit>0?'Cọc '+dong(deposit)+' + CCCD':'Xem cách cọc'}</button>
  <details class="rate-details"><summary>Giá dài ngày</summary><div>Ngày 3–4 · ${currency(third)}/ngày<br>Từ ngày 5 · ${currency(fifth)}/ngày</div></details>
- <a class="button" data-model="${id}" href="#dat-lich" aria-label="${state==='busy'?'Xem mẫu còn thay cho':'Xem lịch trống cho'} ${escapeText(name)}">${state==='busy'?'Xem mẫu còn':state==='free'?'Chọn máy':'Xem lịch trống'}</a></div></article>`;
+ <a class="button" data-model="${id}" href="#dat-lich" aria-label="${state==='busy'?'Xem mẫu còn thay cho':'Xem lịch trống cho'} ${escapeText(name)}">${state==='busy'?'Xem mẫu còn':'Chọn máy'}</a></div></article>`;
 }
 
 function renderCatalog(){
@@ -215,7 +216,7 @@ function showAvailability(){
  const available = id=>availabilityResults[managerModels[id]];
  availabilityStatus.dataset.state = six&&!selected[3] ? 'unknown' : available(model.value) ? 'free' : 'busy';
  availabilityStatus.textContent = six&&!selected[3] ? 'Mẫu này chỉ có gói theo ngày.'
-  : available(model.value) ? (availabilityCounts?.[managerModels[model.value]]?'Còn '+availabilityCounts[managerModels[model.value]]+' máy':'Còn máy')+' · '+selected[1] : 'Hết máy · '+selected[1];
+  : available(model.value) ? 'Còn máy'+' · '+selected[1] : 'Hết máy · '+selected[1];
  const choices = availableModels();
  list.querySelector('summary').textContent = choices.length+' mẫu còn trong khung này';
  $('#available-models').replaceChildren(...choices.map(([id,name])=>{
@@ -570,3 +571,8 @@ if('IntersectionObserver' in window){
  new IntersectionObserver(([e])=>{pastHero=!e.isIntersecting;updateSticky()}).observe($('#rental-finder'));
 }
 model.addEventListener('change',renderCatalog);
+
+// Khách tự chọn ngày thì mới hiện trạng thái còn/hết trên thẻ máy
+function markDatePicked(){if(!datePicked){datePicked=true;renderCatalog()}}
+for(const input of [plan,start,end,hour])input.addEventListener('input',markDatePicked);
+for(const el of document.querySelectorAll('[data-day-offset],#weekend-shortcut,#check-availability'))el.addEventListener('click',markDatePicked);
