@@ -1,0 +1,152 @@
+/* ===== Cami motion & polish ===== */
+:root{--ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.34,1.56,.64,1)}
+
+/* Header: shrinks + shadow on scroll, animated active link */
+.top{transition:box-shadow .3s var(--ease),background .3s}
+.top.scrolled{box-shadow:0 6px 24px #5a1f3a14;background:#fffcf9f2}
+.top .nav{transition:min-height .3s var(--ease)}
+.top.scrolled .nav{min-height:58px}
+.nav nav a{position:relative;padding:6px 2px;transition:color .2s}
+.nav nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;background:#8a355d;transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.nav nav a:hover,.nav nav a.active{color:#8a355d}
+.nav nav a:hover::after,.nav nav a.active::after{transform:scaleX(1)}
+
+/* Buttons: lift, sheen, ripple */
+.button,.hero-catalog-link,.hero-ghost,.filters button,.date-shortcuts button{position:relative;overflow:hidden;transition:transform .2s var(--ease),box-shadow .2s var(--ease),background .2s,color .2s,border-color .2s}
+.button:hover,.hero-catalog-link:hover,.hero-ghost:hover{transform:translateY(-2px);box-shadow:0 8px 20px #6823422b}
+.button:active,.hero-catalog-link:active,.filters button:active,.date-shortcuts button:active{transform:translateY(0) scale(.97)}
+.dark::before,.hero-catalog-link::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,#ffffff40 50%,transparent 70%);transform:translateX(-120%);transition:transform .7s var(--ease);pointer-events:none}
+.dark:hover::before,.hero-catalog-link:hover::before{transform:translateX(120%)}
+.ripple{position:absolute;border-radius:50%;background:currentColor;opacity:.25;transform:scale(0);animation:ripple .6s var(--ease) forwards;pointer-events:none}
+@keyframes ripple{to{transform:scale(1);opacity:0}}
+
+/* Hero: soft animated blobs, floating camera, staggered text */
+.hero{background:linear-gradient(135deg,#fff7f0 0%,#fdeef3 55%,#f8e1ea 100%)}
+.hero::before,.hero::after{content:"";position:absolute;z-index:-1;border-radius:50%;filter:blur(40px);opacity:.55;pointer-events:none}
+.hero::before{width:46%;aspect-ratio:1;background:#f6c3d6;top:-28%;right:6%;animation:blob 14s ease-in-out infinite alternate}
+.hero::after{width:34%;aspect-ratio:1;background:#ffe0c7;bottom:-30%;left:-6%;animation:blob 18s ease-in-out infinite alternate-reverse}
+@keyframes blob{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-6%,8%) scale(1.12)}100%{transform:translate(5%,-4%) scale(.95)}}
+@keyframes float{0%,100%{translate:0 0}50%{translate:0 -12px}}
+.hero-product img{transition:transform .5s var(--ease)}
+.hero-product::after{animation:twinkle 3.2s ease-in-out infinite}
+@keyframes twinkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.25) rotate(25deg)}}
+.hero h1{animation:rise .8s var(--ease) both}
+.hero h1 em{animation:rise .8s .12s var(--ease) both}
+.hero h1>span{animation:rise .8s .24s var(--ease) both}
+.hero-cta{animation:rise .8s .36s var(--ease) both}
+.hero-trust{animation:rise .8s .48s var(--ease) both}
+.hero-product img{animation:img-in .9s .15s var(--spring) both,float 6s 1.1s ease-in-out infinite}
+.hero-product::before{animation:img-in .9s var(--spring) both}
+@keyframes img-in{from{opacity:0;scale:.85}to{opacity:1;scale:1}}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes pop-in{from{opacity:0;transform:scale(.85) rotate(-4deg)}to{opacity:1;transform:none}}
+.hero-phrase{background:linear-gradient(90deg,#8a355d,#d0739b,#8a355d);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite}
+@keyframes shine{to{background-position:-200% 0}}
+
+/* Scroll reveal (class added by JS only, so content is never hidden without JS) */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease),transform .7s var(--ease);transition-delay:calc(var(--i,0) * 70ms)}
+.reveal.in{opacity:1;transform:none}
+
+/* Finder */
+.rental-finder{transition:box-shadow .3s}
+.rental-finder:focus-within{box-shadow:0 18px 46px #6027461f}
+input:not([type=checkbox]),select,textarea{transition:border-color .2s,box-shadow .2s,background .2s}
+input:not([type=checkbox]):focus,select:focus,textarea:focus{outline:none;border-color:#b45d85;box-shadow:0 0 0 4px #b45d8522}
+.date-shortcuts [aria-pressed=true],.filters [aria-pressed=true]{box-shadow:0 4px 12px #8a355d26}
+.finder-summary:not(:empty){animation:rise .45s var(--ease)}
+#catalog-availability{transition:color .3s}
+
+/* Cards */
+.card .product-image{overflow:hidden}
+.card .product-image img{transition:transform .6s var(--ease)}
+.card:hover .product-image img{transform:scale(1.07) rotate(-1.5deg)}
+.card .button{transition:background .2s,color .2s,transform .2s var(--ease)}
+.card.is-selected{animation:selected .5s var(--spring)}
+@keyframes selected{0%{transform:scale(.97)}100%{transform:none}}
+.card.is-selected::after{content:"✓ Đã chọn";position:absolute;top:10px;left:10px;z-index:2;padding:3px 10px;border-radius:20px;background:#682342;color:#fff;font-size:12px;font-weight:700;animation:pop-in .4s var(--spring)}
+.card{position:relative}
+.stock-tag[data-state="free"]::before{animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #2e8b5a66}50%{box-shadow:0 0 0 5px #2e8b5a00}}
+.occasion-card{transition:transform .25s var(--ease),box-shadow .25s}
+.occasion-card:hover{transform:translateY(-3px);box-shadow:0 12px 26px #6a284518}
+.occasion-card img{transition:transform .5s var(--ease)}
+.occasion-card:hover img{transform:scale(1.06) rotate(-2deg)}
+.occasion-models.switching .occasion-card{animation:rise .5s var(--ease) both}
+.occasion-models.switching .occasion-card:nth-child(2){animation-delay:.08s}
+
+/* Skeleton while catalog loads */
+.skeleton-card{border-radius:18px;background:#fff;border:1px solid var(--line);overflow:hidden;min-height:330px}
+.skeleton-card::before{content:"";display:block;aspect-ratio:1.46;background:#f6edf1}
+.skeleton-card i{display:block;height:13px;margin:14px 14px 0;border-radius:8px;background:#f3e8ec}
+.skeleton-card i:nth-child(2){width:55%}
+.skeleton-card,.skeleton-card i{background-image:linear-gradient(100deg,transparent 30%,#ffffffb3 50%,transparent 70%);background-size:200% 100%;animation:shimmer 1.3s linear infinite}
+@keyframes shimmer{from{background-position:150% 0}to{background-position:-50% 0}}
+.skeleton-rail{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 42px)/4);gap:14px;overflow:hidden}
+@media(max-width:900px){.skeleton-rail{grid-auto-columns:calc((100% - 24px)/3)}}
+@media(max-width:600px){.skeleton-rail{grid-auto-columns:54%}}
+
+/* Carousel arrows (desktop) */
+.camera-group,.hot-cameras{position:relative}
+.rail-nav{position:absolute;top:2px;right:0;display:flex;gap:6px}
+.rail-nav button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;color:#682342;font-size:18px;display:grid;place-items:center;box-shadow:0 4px 12px #5a1f3a12;transition:transform .2s var(--ease),background .2s,opacity .2s}
+.rail-nav button:hover{background:#682342;color:#fff;transform:scale(1.08)}
+.rail-nav button:disabled{opacity:.35;pointer-events:none}
+.hot-cameras .rail-nav{top:6px}
+@media(hover:hover) and (pointer:fine){.rail-hint{display:none}}
+@media(hover:none),(pointer:coarse){.rail-nav{display:none}}
+
+/* Booking */
+.price-summary output[data-ok] span:last-child{display:inline-block}
+.price-summary output.bump span:last-child{animation:bump .45s var(--spring)}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.14)}100%{transform:scale(1)}}
+.request-success:not([hidden]){animation:pop-in .55s var(--spring)}
+.success-icon{animation:pop-in .6s .15s var(--spring) both}
+
+/* Steps: connected timeline */
+.steps{position:relative;counter-reset:step}
+.steps article{position:relative;transition:transform .25s var(--ease),box-shadow .25s}
+.steps article:hover{transform:translateY(-4px);box-shadow:0 14px 30px #6a284516}
+.steps article span{display:grid!important;place-items:center;width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#8a355d,#c56891);color:#fff!important;font-size:14px;box-shadow:0 6px 14px #8a355d40}
+@media(min-width:651px){.steps::before{content:"";position:absolute;top:37px;left:12%;right:12%;height:2px;background:linear-gradient(90deg,#e8c3d3,#b45d85,#e8c3d3);z-index:-1}}
+details.policy{transition:box-shadow .25s,border-color .25s}
+details.policy:hover{border-color:#e2c4d1}
+details.policy[open]{box-shadow:0 10px 26px #6a284512}
+details.policy summary::after{transition:transform .3s var(--ease),background .2s}
+details.policy[open] summary::after{transform:translateY(-50%) rotate(180deg);background:#682342;color:#fff}
+details.policy[open]>:not(summary){animation:rise .4s var(--ease)}
+
+/* Dialogs */
+dialog[open]{animation:dialog-in .35s var(--spring)}
+dialog::backdrop{backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+@keyframes dialog-in{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:none}}
+#stock-list li{animation:rise .4s var(--ease) both}
+#stock-list li:nth-child(2){animation-delay:.03s}#stock-list li:nth-child(3){animation-delay:.06s}#stock-list li:nth-child(4){animation-delay:.09s}#stock-list li:nth-child(5){animation-delay:.12s}#stock-list li:nth-child(n+6){animation-delay:.15s}
+#stock-list button{transition:border-color .2s,background .2s,transform .2s var(--ease)}
+#stock-list button:hover{border-color:#b45d85;background:#fdf3f7;transform:translateY(-2px)}
+
+/* Toast */
+.toast-wrap{position:fixed;left:50%;top:84px;z-index:60;display:grid;gap:8px;transform:translateX(-50%);pointer-events:none;width:max-content;max-width:calc(100% - 32px)}
+.toast{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:40px;background:#2c1a24;color:#fff;font-size:14px;font-weight:600;box-shadow:0 12px 30px #2c1a2440;animation:toast-in .4s var(--spring)}
+.toast img{width:34px;height:26px;object-fit:contain;background:#fff;border-radius:6px}
+.toast.out{animation:toast-out .3s var(--ease) forwards}
+@keyframes toast-in{from{opacity:0;transform:translateY(-14px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes toast-out{to{opacity:0;transform:translateY(-10px)}}
+
+/* Sticky bar + quick contact */
+.sticky-book:not([hidden]){animation:slide-up .4s var(--spring)}
+@keyframes slide-up{from{transform:translateY(100%)}to{transform:none}}
+.contact-link .contact-icon{transition:transform .25s var(--spring)}
+.contact-link:hover .contact-icon{transform:scale(1.12) rotate(-6deg)}
+.phone .contact-icon{animation:ring 4s ease-in-out infinite}
+@keyframes ring{0%,88%,100%{transform:none}90%{transform:rotate(-12deg)}92%{transform:rotate(12deg)}94%{transform:rotate(-8deg)}96%{transform:rotate(8deg)}}
+
+/* Scroll progress bar */
+.scroll-progress{position:fixed;top:0;left:0;height:3px;width:100%;z-index:40;background:linear-gradient(90deg,#b45d85,#e7a0bf);transform-origin:left;transform:scaleX(var(--p,0));pointer-events:none}
+
+/* Confetti canvas */
+.confetti{position:fixed;inset:0;z-index:70;pointer-events:none}
+
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation:none!important;transition:none!important}
+ .reveal{opacity:1;transform:none}
+}
