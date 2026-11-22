@@ -28,7 +28,7 @@ const onlyAvailable = $('#only-available');
 const catalogAvailability = $('#catalog-availability');
 const requestFeedback = $('#request-feedback');
 const submitRequest = $('#submit-request');
-const managerApi = 'https://cami-camera-manager.gleamingname.chatgpt.site/api/public';
+const managerApi = 'https://cami-manager.cami-manager.workers.dev/api/public';
 const hotIds=['r50','xt20','xt30','xs10','m50','m10'];
 const hotRank=id=>hotIds.includes(id)?hotIds.indexOf(id):hotIds.length;
 const byPriority=(a,b)=>hotRank(a[0])-hotRank(b[0]);
