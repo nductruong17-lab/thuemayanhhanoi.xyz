@@ -307,10 +307,15 @@ async function openStockList(){
  const choices=availableModels();
  summary.textContent=choices.length?choices.length+' mẫu còn · Giá thuê dự kiến':'Hết máy trong khung này. Thử chọn ngày khác.';
  const days=1+(Date.parse(to.slice(0,10))-Date.parse(from.slice(0,10)))/dayMs;
- list.innerHTML=choices.map(([id,name,,six,day,third,fifth])=>{
+ const item=([id,name,,six,day,third,fifth])=>{
   const price=plan.value==='six'?six:dayPrice(days,day,third,fifth);
   return `<li><button type="button" data-model="${id}"><strong>${escapeText(name)}</strong><span>${currency(price)}</span></button></li>`;
- }).join('');
+ };
+ // Tách máy ảnh và ống kính thành hai nhóm riêng.
+ const isLens=row=>row[2]==='Ống kính';
+ list.innerHTML=[['Máy ảnh',choices.filter(row=>!isLens(row))],['Ống kính',choices.filter(isLens)]]
+  .filter(([,rows])=>rows.length)
+  .map(([title,rows])=>`<li class="stock-group">${title} <small>${rows.length}</small></li>`+rows.map(item).join('')).join('');
  note.hidden=!choices.length;
 }
 checkAvailability.addEventListener('click',openStockList);
@@ -506,13 +511,13 @@ async function loadCatalog(){
   const names=new Set();
   const rows=[];
   for(const item of data.models){
-   const {model:name,six,day,third,fifth,deposit}=item;
+   const {model:name,six,day,third,fifth,deposit,lens}=item;
    if(typeof name!=='string'||!name||names.has(name)||![six,day,third,fifth].every(n=>Number.isSafeInteger(n)&&n>=0))continue;
    names.add(name);
    const known=photoMetadata.find(([id])=>managerModels[id]===name);
    const [id,title,brand]=known||['manager-'+rows.length,name,'Khác'];
    managerModels[id]=name;
-   rows.push([id,title,brand,six,day,third,fifth,known?.[0],Number.isSafeInteger(deposit)&&deposit>=0?deposit:undefined]);
+   rows.push([id,title,lens===true&&!known?'Ống kính':brand,six,day,third,fifth,known?.[0],Number.isSafeInteger(deposit)&&deposit>=0?deposit:undefined]);
   }
   if(!rows.length||!['battery','reflector','tripod'].every(key=>Number.isSafeInteger(data.extras?.[key])&&data.extras[key]>=0))throw Error('Catalog incomplete');
   catalog=rows.sort(byPriority);

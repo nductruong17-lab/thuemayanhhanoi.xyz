@@ -283,3 +283,6 @@ input:not([type=checkbox]),select,textarea{border-radius:10px;border-color:#d9c5
 /* Máy ảnh đầu trang giữ màu gốc */
 .hero-product::before{background:#fff;border-color:#fff;box-shadow:0 14px 34px #4a1f3322}
 .hero-product img{mix-blend-mode:multiply}
+#stock-list .stock-group{grid-column:1/-1;font-weight:700;font-size:13px;margin:8px 0 2px}
+#stock-list .stock-group:first-child{margin-top:0}
+#stock-list .stock-group small{font-weight:500;opacity:.6}
