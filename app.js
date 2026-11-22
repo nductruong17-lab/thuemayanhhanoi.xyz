@@ -151,8 +151,19 @@ function renderCatalog(){
  $('#empty').textContent=only?'Không có mẫu còn máy với bộ lọc này. Thử đổi khung thuê hoặc hãng.':'Không tìm thấy mẫu phù hợp.';
 }
 
+let modelPicked=false; // khách đã tự chọn máy chưa
+// Máy chọn sẵn đã hết trong khung giờ → chuyển sang máy hot còn trống (chỉ khi khách chưa tự chọn)
+function autoPickAvailable(){
+ if(modelPicked||sending||!availabilityResults)return;
+ const cur=catalog.find(item=>item[0]===model.value);
+ if(cur&&availableForPlan(cur[0],cur[3]))return;
+ const choices=availableModels();
+ const next=choices.filter(([id])=>hotIds.includes(id)).sort(byPriority)[0]||choices[0];
+ if(next){model.value=next[0];requestEdited()}
+}
 function chooseModel(id){
  if(!id||sending)return;
+ modelPicked=true;
  model.value=id;
  requestEdited();
  renderCatalog();
@@ -256,6 +267,7 @@ async function loadAvailability(){
   if(!catalog.every(([id])=>typeof data.models?.[managerModels[id]]==='boolean'))throw Error('Lịch chưa đủ dữ liệu');
   availabilityResults=data.models;
   availabilityCounts=data.counts;
+  autoPickAvailable();
   onlyAvailable.disabled=false;
   const availableCount=availableModels().length;
   catalogAvailability.textContent=availableCount?availableCount+' mẫu còn trong khung này.':'Đã hết máy trong khung này. Thử chọn ngày khác.';
@@ -570,7 +582,7 @@ if('IntersectionObserver' in window){
  new IntersectionObserver(([e])=>{bookingVisible=e.isIntersecting;updateSticky()},{threshold:0.05}).observe($('#dat-lich'));
  new IntersectionObserver(([e])=>{pastHero=!e.isIntersecting;updateSticky()}).observe($('#rental-finder'));
 }
-model.addEventListener('change',renderCatalog);
+model.addEventListener('change',()=>{modelPicked=true;renderCatalog()});
 
 // Khách tự chọn ngày thì mới hiện trạng thái còn/hết trên thẻ máy
 function markDatePicked(){if(!datePicked){datePicked=true;renderCatalog()}}
