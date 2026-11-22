@@ -43,7 +43,7 @@ function reveal(el,i=0,key){
  el.classList.add('reveal');el.style.setProperty('--i',i);
  revealIO.observe(el);
 }
-qa('.reviews-head, .reviews-actions, .recommendations .section-head, #may .section-head, .booking-grid>div:first-child, #request, #quy-trinh h2, .steps article, details.policy').forEach((el,i)=>reveal(el,el.matches('.steps article,details.policy')?i%4:0));
+qa('.reviews-head, .visit-card, .recommendations .section-head, #may .section-head, .booking-grid>div:first-child, #request, #quy-trinh h2, .steps article, details.policy').forEach((el,i)=>reveal(el,el.matches('.steps article,details.policy')?i%4:0));
 function revealCards(container){
  qa('.card',container).forEach((card,i)=>{
   const id=card.querySelector('[data-model]')?.dataset.model;
